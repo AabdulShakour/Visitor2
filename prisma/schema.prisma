@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+  posts Post[]
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  viewCount Int      @default(0)
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?
+}
+
+
+model Visiter {
+  id                        Int      @id @default(autoincrement())
+  email                     String   @unique
+  fullname                  String?
+  job_description           String
+  destination               String
+  mobile                    String
+  gender                    Gender?  @relation(fields: [genderId], references: [id])
+  genderId                  Int?
+  hoster_Name               String
+  hoster_Department         String
+  hoster_Hoster_Directorate String
+  createdAt                 DateTime @default(now())
+  owner                     Owner?    @relation(fields: [createdby], references: [id])
+  createdby                 Int
+  updateAt                  DateTime
+  updatedby                 Int
+  isActive                  Boolean  @default(true)
+  profile                   Profile? @relation(fields: [profileId], references: [id])
+  profileId                 Int?
+}
+
+model Profile {
+  id      Int       @id @default(autoincrement())
+  type    String?
+  visiter Visiter[]
+}
+
+model Gender {
+  id      Int       @id @default(autoincrement())
+  type    String?
+  visiter Visiter[]
+} 
+ 
+model Owner {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  fullname  String?
+  password  String?
+  createdAt DateTime  @default(now())
+  updateAt  DateTime  @default(now())
+  isActive  Boolean   @default(true)
+  Visiter1  Visiter[]
+
+}
+ 
+
+
